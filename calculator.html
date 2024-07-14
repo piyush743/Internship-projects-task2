@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display"></div>
+        <div class="buttons">
+            <button class="button" data-value="7">7</button>
+            <button class="button" data-value="8">8</button>
+            <button class="button" data-value="9">9</button>
+            <button class="button operator" data-value="/">/</button>
+            <button class="button" data-value="4">4</button>
+            <button class="button" data-value="5">5</button>
+            <button class="button" data-value="6">6</button>
+            <button class="button operator" data-value="*">*</button>
+            <button class="button" data-value="1">1</button>
+            <button class="button" data-value="2">2</button>
+            <button class="button" data-value="3">3</button>
+            <button class="button operator" data-value="-">-</button>
+            <button class="button" data-value="0">0</button>
+            <button class="button" data-value=".">.</button>
+            <button class="button" id="clear">C</button>
+            <button class="button operator" data-value="+">+</button>
+            <button class="button equal" id="equals">=</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <style>
+        body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.calculator {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.display {
+    grid-column: span 4;
+    background-color: #222;
+    color: #fff;
+    font-size: 2em;
+    text-align: right;
+    padding: 10px;
+    border-radius: 5px;
+    word-wrap: break-word;
+}
+
+.buttons {
+    display: contents;
+}
+
+.button {
+    padding: 20px;
+    font-size: 1.5em;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.button.operator {
+    background-color: #f39c12;
+    color: #fff;
+}
+
+.button.equal {
+    grid-column: span 4;
+    background-color: #27ae60;
+    color: #fff;
+}
+
+.button:hover {
+    background-color: #ddd;
+}
+
+.button.operator:hover {
+    background-color: #e67e22;
+}
+
+.button.equal:hover {
+    background-color: #2ecc71;
+}
+ 
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const display = document.getElementById('display');
+    const buttons = Array.from(document.getElementsByClassName('button'));
+    let operator = null;
+    let firstOperand = '';
+    let secondOperand = '';
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const value = button.getAttribute('data-value');
+            
+            if (button.id === 'clear') {
+                display.innerText = '';
+                firstOperand = '';
+                secondOperand = '';
+                operator = null;
+            } else if (button.id === 'equals') {
+                if (operator && firstOperand !== '' && secondOperand !== '') {
+                    display.innerText = calculate(parseFloat(firstOperand), parseFloat(secondOperand), operator);
+                    firstOperand = display.innerText;
+                    secondOperand = '';
+                    operator = null;
+                }
+            } else if (button.classList.contains('operator')) {
+                operator = value;
+                if (firstOperand !== '' && secondOperand !== '') {
+                    firstOperand = calculate(parseFloat(firstOperand), parseFloat(secondOperand), operator);
+                    display.innerText = firstOperand;
+                    secondOperand = '';
+                }
+            } else {
+                if (operator) {
+                    secondOperand += value;
+                    display.innerText = secondOperand;
+                } else {
+                    firstOperand += value;
+                    display.innerText = firstOperand;
+                }
+            }
+        });
+    });
+
+    function calculate(a, b, operator) {
+        switch (operator) {
+            case '+':
+                return a + b;
+            case '-':
+                return a - b;
+            case '*':
+                return a * b;
+            case '/':
+                return a / b;
+            default:
+                return 0;
+        }
+    }
+});
+
+    </script>
+</body>
+</html>
